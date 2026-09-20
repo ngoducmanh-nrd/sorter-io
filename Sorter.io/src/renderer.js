@@ -194,7 +194,7 @@ let settings = {
 
 // Initialize Web Application
 async function init() {
-  console.log('SORTER.IO v2.1.1 ĐÃ CHẠY ');
+  console.log('SORTER.IO v2.1.2 🔥');
   if (!('showDirectoryPicker' in window)) showBrowserSupportWarning();
 
   // Load settings
