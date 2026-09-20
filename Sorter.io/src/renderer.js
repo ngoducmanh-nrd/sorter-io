@@ -195,6 +195,22 @@ let settings = {
 // Initialize Web Application
 async function init() {
   console.log('SORTER.IO v2.1.2 🔥');
+
+  // Hiển thị version thật
+  try {
+    if (window.__TAURI__?.app?.getVersion) {
+      const ver = await window.__TAURI__.app.getVersion();
+      const el = document.getElementById('app-version');
+      if (el) el.innerText = 'v' + ver;
+    } else {
+      // Chạy trên web → fallback hard-code
+      const el = document.getElementById('app-version');
+      if (el) el.innerText = 'v2.1.2-web';
+    }
+  } catch (e) {
+    console.warn('Không lấy được version:', e);
+  }
+
   if (!('showDirectoryPicker' in window)) showBrowserSupportWarning();
 
   // Load settings
