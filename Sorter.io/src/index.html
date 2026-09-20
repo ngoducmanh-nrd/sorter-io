@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto File Organizer - Sorter.io</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4" />
+          </svg>
+        </div>
+        <div class="logo-text-group">
+          <span class="logo-text">Sorter.io</span>
+          <span class="logo-badge">Pro Utility</span>
+        </div>
+      </div>
+      <nav style="flex-grow: 1;">
+        <ul class="menu-list">
+          <li class="menu-item active" id="menu-dash" data-page="page-dashboard">
+            <svg viewBox="0 0 24 24">
+              <rect x="3" y="3" width="7" height="9" rx="1" />
+              <rect x="14" y="3" width="7" height="5" rx="1" />
+              <rect x="14" y="12" width="7" height="9" rx="1" />
+              <rect x="3" y="16" width="7" height="5" rx="1" />
+            </svg>
+            Tổng Quan
+          </li>
+          <li class="menu-item" id="menu-rules" data-page="page-categories">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+            Quy Tắc Phân Loại
+          </li>
+          <li class="menu-item" id="menu-logs" data-page="page-logs">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Lịch Sử Hoạt Động
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <p>Auto File Organizer v2.0</p>
+        <p>File System Access Engine</p>
+      </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="main-content">
+      <!-- App Header -->
+      <header class="header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="btn-mobile-menu" aria-label="Toggle menu">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <div class="header-title">
+            <h1 id="app-title-display">Tổng Quan</h1>
+            <p id="app-subtitle-display">Quản lý và tự động sắp xếp tập tin nhanh chóng trên Web</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <div class="status-pill">
+            <span class="status-dot status-idle" id="status-dot"></span>
+            <span id="status-text">Sẵn Sàng</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- PAGE: DASHBOARD -->
+      <section id="page-dashboard" class="page-view active">
+        <!-- Quick Stats Grid -->
+        <div class="stats-grid">
+          <div class="panel stat-card stat-card-success">
+            <div class="stat-info">
+              <div class="stat-value" id="stat-moved">0</div>
+              <div class="stat-label">Đã di chuyển thành công</div>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          <div class="panel stat-card stat-card-warning">
+            <div class="stat-info">
+              <div class="stat-value" id="stat-errors">0</div>
+              <div class="stat-label">Gặp lỗi / Bị bỏ qua</div>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+          </div>
+          <div class="panel stat-card stat-card-info">
+            <div class="stat-info">
+              <div class="stat-value" id="stat-rules-count">5</div>
+              <div class="stat-label">Danh mục quy tắc đang áp dụng</div>
+            </div>
+            <div class="stat-icon-wrapper">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Folder Path Settings Panel -->
+          <div class="panel" style="position: relative;">
+            <!-- Running Overlay -->
+            <div class="running-overlay" id="dashboard-overlay">
+              <div class="spinner"></div>
+              <div class="running-overlay-text">Đang phân loại tệp tin...</div>
+            </div>
+
+            <h2 class="panel-title">
+              <svg viewBox="0 0 24 24">
+                <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+              </svg>
+              Cấu hình đường dẫn thư mục
+            </h2>
+
+            <div class="form-group">
+              <label class="form-label" for="input-source-dir">Thư mục nguồn (Ví dụ: Thư mục Downloads)</label>
+              <div class="path-input-container">
+                <input type="text" id="input-source-dir" class="text-input" readonly
+                  placeholder="Chọn thư mục tải về cần phân loại...">
+                <button type="button" class="btn btn-primary" id="btn-browse-source">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                  </svg>
+                  Chọn Thư Mục...
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-dest-dir">Thư mục phân loại mặc định (Chứa các thư mục Install,
+                Picture...)</label>
+              <div class="path-input-container">
+                <input type="text" id="input-dest-dir" class="text-input" readonly
+                  placeholder="Chọn thư mục đích lưu trữ phân loại...">
+                <button type="button" class="btn" id="btn-browse-dest">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                  </svg>
+                  Chọn...
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-ignore-patterns">
+                Bỏ qua tệp (mỗi dòng 1 pattern, hỗ trợ <code>*</code> và <code>?</code>)
+              </label>
+              <textarea id="input-ignore-patterns" class="text-input" rows="3"
+                placeholder="*.bak&#10;thumbs.db&#10;*.log&#10;~$*"></textarea>
+            </div>
+
+            <div style="margin-top: 20px; color: var(--text-muted); font-size: 0.82rem;">
+              <p>Mẹo: Khi bấm BẮT ĐẦU, hệ thống sẽ tự động quét và di chuyển các tập tin từ thư mục nguồn sang các thư
+                mục phân loại tương ứng.</p>
+            </div>
+          </div>
+
+          <!-- Big Action Panel -->
+          <div class="panel run-panel">
+            <div style="display:flex; align-items:center; justify-content:space-between; width:100%; margin-bottom:12px;">
+              <h2 class="panel-title" style="margin-bottom: 0;">Khởi Chạy</h2>
+              <label class="toggle-switch" title="Tự động phân loại khi có tệp mới xuất hiện">
+                <input type="checkbox" id="toggle-watch">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:16px;">
+              Bật để tự động phân loại khi có tệp mới
+            </p>
+            <button class="run-btn-large" id="btn-run-organizer">
+              <svg viewBox="0 0 24 24">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              <span>BẮT ĐẦU</span>
+            </button>
+
+            <div class="run-progress" id="run-progress" hidden>
+              <div class="run-progress-bar">
+                <div class="run-progress-fill" id="run-progress-fill"></div>
+              </div>
+              <div class="run-progress-text" id="run-progress-text">0 / 0 (0%)</div>
+            </div>
+
+            <p class="run-status-text" id="run-status-desc">Nhấp để phân loại tự động</p>
+          </div>
+        </div>
+
+        <!-- Recent Activity Logs Panel -->
+        <div class="panel activity-panel">
+          <div class="activity-header">
+            <h2 class="panel-title" style="margin-bottom: 0;">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Lịch sử phân loại gần đây
+            </h2>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-small btn-undo" id="btn-undo-lastrun" disabled>
+                <svg viewBox="0 0 24 24"><path d="M3 7v6h6M21 17a9 9 0 00-15-6.7L3 13"/></svg>
+                Hoàn tác lần cuối
+              </button>
+              <button class="btn btn-small btn-danger" id="btn-clear-dash-logs">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Xóa lịch sử
+              </button>
+            </div>
+          </div>
+          <div class="activity-list" id="dash-activity-list">
+            <!-- Dynamic items go here -->
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <p>Chưa có tập tin nào được xử lý. Bấm nút BẮT ĐẦU để chạy phân loại.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE: CATEGORIES CONFIG -->
+      <section id="page-categories" class="page-view">
+        <div class="rules-toolbar">
+          <div>
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);">Quản lý quy tắc phân loại</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Thiết lập định dạng đuôi tệp tin
+              và vị trí lưu trữ cụ thể cho từng mục phân loại.</p>
+          </div>
+          <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+            <div class="search-box-wrapper">
+              <svg viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input type="text" id="input-search-categories" class="text-input"
+                placeholder="Tìm kiếm danh mục, đuôi file...">
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-small" id="btn-export-config">Xuất cấu hình</button>
+              <button class="btn btn-small" id="btn-import-config">Nhập cấu hình</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="categories-container" id="categories-list-container">
+          <!-- Dynamic category cards go here -->
+        </div>
+      </section>
+
+      <!-- PAGE: HISTORY LOGS -->
+      <section id="page-logs" class="page-view">
+        <div class="panel" style="display: flex; flex-direction: column; min-height: 400px;">
+          <div class="activity-header">
+            <h2 class="panel-title" style="margin-bottom: 0;">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              Chi tiết lịch sử di chuyển tệp tin
+            </h2>
+            <button class="btn btn-small btn-danger" id="btn-clear-all-logs">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Xóa toàn bộ lịch sử
+            </button>
+          </div>
+          <div class="activity-list" id="full-activity-list">
+            <!-- Full logs list -->
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <p>Chưa có bản ghi hoạt động nào.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="renderer.js"></script>
+</body>
+
+</html>

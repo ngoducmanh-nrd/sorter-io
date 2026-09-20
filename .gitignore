@@ -1,0 +1,18 @@
+# Tauri build
+Sorter.io/src-tauri/target/
+Sorter.io/node_modules/
+Sorter.io/src-tauri/gen/
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Env
+.env
+*.key
+*.key.pub
