@@ -1,3 +1,5 @@
+import './js/tauri-dialog-shim.js';
+
 // renderer.js — đầu file
 import {
   debounce, parseExtension, uniqueFileName,
@@ -19,6 +21,7 @@ import {
 
 import { toast, toastSuccess, toastError, toastInfo, toastWarning } from './js/toast.js';
 import { confirmDialog, promptDialog, previewDialog, advancedRulesDialog } from './js/modal.js';
+import { checkForUpdates } from './js/updater.js';
 
 // Elements cache
 const els = {
@@ -191,6 +194,7 @@ let settings = {
 
 // Initialize Web Application
 async function init() {
+  console.log('SORTER.IO v2.1.1 ĐÃ CHẠY ');
   if (!('showDirectoryPicker' in window)) showBrowserSupportWarning();
 
   // Load settings
@@ -1079,4 +1083,9 @@ async function handleUndo() {
 }
 
 // Start Web application
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', async () => {
+  await init();
+  if (window.__TAURI_INTERNALS__) {
+    setTimeout(() => checkForUpdates({ silent: true }), 3000);
+  }
+});

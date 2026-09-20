@@ -1,5 +1,6 @@
 // js/storage.js
 import { normalizeCategory } from './rules.js';
+import { serializeHandle, deserializeHandle } from './tauri-dialog-shim.js';
 
 const DB_NAME = 'sorter_io';
 const DB_VERSION = 2;
@@ -43,21 +44,31 @@ async function getStore(name, mode = 'readonly') {
 /* ============ HANDLES ============ */
 
 export async function saveHandle(key, handle) {
-    const store = await getStore(STORE_HANDLES, 'readwrite');
-    return new Promise((res, rej) => {
-        const req = store.put(handle, key);
-        req.onsuccess = () => res();
-        req.onerror = () => rej(req.error);
-    });
+  const store = await getStore(STORE_HANDLES, 'readwrite');
+  const serialized = serializeHandle(handle);
+  return new Promise((res, rej) => {
+    try {
+      const req = store.put(serialized, key);
+      req.onsuccess = () => res();
+      req.onerror = () => rej(req.error);
+    } catch (e) {
+      // DataCloneError — fallback bỏ qua nếu vẫn không clone được
+      console.warn('[Storage] saveHandle failed:', e);
+      rej(e);
+    }
+  });
 }
 
 export async function loadHandle(key) {
-    const store = await getStore(STORE_HANDLES, 'readonly');
-    return new Promise((res, rej) => {
-        const req = store.get(key);
-        req.onsuccess = () => res(req.result || null);
-        req.onerror = () => rej(req.error);
-    });
+  const store = await getStore(STORE_HANDLES, 'readonly');
+  return new Promise((res, rej) => {
+    const req = store.get(key);
+    req.onsuccess = () => {
+      const raw = req.result;
+      res(raw ? deserializeHandle(raw) : null);
+    };
+    req.onerror = () => rej(req.error);
+  });
 }
 
 export async function clearHandle(key) {

@@ -1,0 +1,67 @@
+@echo off
+chcp 65001 > nul
+echo ==========================================
+echo   TAO FILE LATEST.JSON CHO AUTO-UPDATE
+echo ==========================================
+echo.
+
+cd /d "%~dp0Sorter.io\src-tauri\target\release\bundle\nsis"
+
+REM === TÌM FILE ===
+for %%f in (*_x64-setup.nsis.zip.sig) do set SIG_FILE=%%f
+for %%f in (*_x64-setup.nsis.zip) do set ZIP_FILE=%%f
+for %%f in (*_x64-setup.exe) do set EXE_FILE=%%f
+
+if "%SIG_FILE%"=="" (
+  echo [LOI] Khong tim thay file .sig
+  pause
+  exit /b 1
+)
+
+REM === DOC VERSION TU TAURI.CONF.JSON ===
+for /f "tokens=2 delims=:," %%a in ('findstr /C:"\"version\"" "..\..\..\..\src-tauri\tauri.conf.json"') do (
+  set VERSION=%%a
+  goto :got_version
+)
+:got_version
+set VERSION=%VERSION: =%
+set VERSION=%VERSION:"=%
+
+echo Version: %VERSION%
+echo Sig file: %SIG_FILE%
+echo.
+
+REM === TAO latest.json ===
+set /p SIGNATURE=<%SIG_FILE%
+
+set REPO_URL=https://github.com/ngoducmanh-nrd/sorter-io
+set ZIP_URL=%REPO_URL%/releases/download/v%VERSION%/%ZIP_FILE%
+
+(
+  echo {
+  echo   "version": "%VERSION%",
+  echo   "notes": "Phien ban %VERSION%",
+  echo   "pub_date": "%DATE%",
+  echo   "platforms": {
+  echo     "windows-x86_64": {
+  echo       "signature": "%SIGNATURE%",
+  echo       "url": "%ZIP_URL%"
+  echo     }
+  echo   }
+  echo }
+) > latest.json
+
+echo.
+echo === NOI DUNG latest.json ===
+type latest.json
+echo.
+echo ================================
+echo.
+echo BUOC TIEP THEO:
+echo 1. Mo https://github.com/ngoducmanh-nrd/sorter-io/releases/new
+echo 2. Tag: v%VERSION%
+echo 3. Upload 3 file: .exe, .zip, .sig, va latest.json
+echo 4. Publish release
+echo.
+pause
+explorer .

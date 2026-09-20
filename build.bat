@@ -7,7 +7,7 @@ echo.
 
 REM === CẤU HÌNH - SỬA 2 DÒNG NÀY ===
 set KEY_PATH=%USERPROFILE%\.tauri\sorter-key.key
-set KEY_PASSWORD=matkhau_cua_ban
+set KEY_PASSWORD=ngoducmanh
 
 REM === KIỂM TRA KEY ===
 if not exist "%KEY_PATH%" (
