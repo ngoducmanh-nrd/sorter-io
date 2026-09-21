@@ -194,7 +194,7 @@ let settings = {
 
 // Initialize Web Application
 async function init() {
-  console.log('SORTER.IO v2.1.2 🔥');
+  console.log('SORTER.IO v2.2.0 🔥');
 
   // Hiển thị version thật
   try {
@@ -205,7 +205,7 @@ async function init() {
     } else {
       // Chạy trên web → fallback hard-code
       const el = document.getElementById('app-version');
-      if (el) el.innerText = 'v2.1.2-web';
+      if (el) el.innerText = 'v2.2.0-web';
     }
   } catch (e) {
     console.warn('Không lấy được version:', e);
