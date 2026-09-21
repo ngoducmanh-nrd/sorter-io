@@ -213,6 +213,28 @@ async function init() {
 
   if (!('showDirectoryPicker' in window)) showBrowserSupportWarning();
 
+  // ===== TRAY EVENT LISTENERS =====
+  if (window.__TAURI__?.event) {
+    try {
+      await window.__TAURI__.event.listen('tray-run-organizer', () => {
+        console.log('[Tray] Run organizer requested');
+        if (!els.btnRunOrganizer.classList.contains('running')) {
+          runOrganizer({ skipPreview: false });
+        }
+      });
+
+      await window.__TAURI__.event.listen('tray-toggle-watch', async () => {
+        console.log('[Tray] Toggle watch requested');
+        if (els.toggleWatch) {
+          els.toggleWatch.checked = !els.toggleWatch.checked;
+          els.toggleWatch.dispatchEvent(new Event('change'));
+        }
+      });
+    } catch (e) {
+      console.warn('[Tray] Listen failed:', e);
+    }
+  }
+
   // Load settings
   settings = loadSettings(settings);
 
